@@ -102,3 +102,21 @@ dist
 
 # TernJS port file
 .tern-port
+=======
+.DS_Store
+node_modules/
+dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+tests/**/coverage/
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+>>>>>>> 24b0d11 (数据工厂系列（8）引入vue-admin-template初始化前端项目)
