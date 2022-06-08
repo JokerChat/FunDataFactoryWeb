@@ -87,7 +87,7 @@ export const constantRoutes = [
       {
         path: 'user',
         name: 'User',
-        component: () => import('@/views/form/index'),
+        component: () => import('@/views/user/index'),
         meta: { title: '用户管理', icon: 'el-icon-user' }
       },
       {
