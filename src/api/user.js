@@ -38,3 +38,12 @@ export function updateUser(data) {
     data
   })
 }
+
+export function searchUser(data) {
+  return request({
+    url: '/user/search',
+    method: 'post',
+    data
+  })
+}
+
