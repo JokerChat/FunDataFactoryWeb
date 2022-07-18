@@ -2,50 +2,50 @@
   <div class="app-container">
     <el-card class="user-card">
       <el-form ref="listQuery" size="small" :inline="true" :model="listQuery" class="demo-form-inline">
-      <el-form-item>
-        <el-input v-model="listQuery.search" style="width: 230px" clearable placeholder="请输入用户名" />
-      </el-form-item>
-      <el-form-item>
-        <div style="float: right;">
-          <el-button icon="el-icon-search" size="small" type="primary" @click="search()">查询</el-button>
-          <el-button icon="el-icon-refresh" size="small" @click="refresh('listQuery')">重置</el-button>
-        </div>
-      </el-form-item>
-    </el-form>
+        <el-form-item>
+          <el-input v-model="listQuery.search" style="width: 230px" clearable placeholder="请输入用户名" />
+        </el-form-item>
+        <el-form-item>
+          <div style="float: right;">
+            <el-button icon="el-icon-search" size="small" type="primary" @click="search()">查询</el-button>
+            <el-button icon="el-icon-refresh" size="small" @click="refresh('listQuery')">重置</el-button>
+          </div>
+        </el-form-item>
+      </el-form>
       <div :style="{padding:'20px 0'}">
-    <el-table v-loading="listLoading" :data="lists" style="width: 100%" size="small">
-      <el-table-column align="center" type="index" label="序号" min-width="60px" />
-      <el-table-column align="center" prop="username" label="用户名" width="100px" />
-      <el-table-column align="center" prop="name" label="姓名" width="100px" />
-      <el-table-column align="center" prop="role" label="用户角色" width="120px">
-        <template slot-scope="{row}">
-          <el-tag
-            :type="row.role === 0 ? 'success' :
-              row.role === 1 ? 'warning' : ''"
-            effect="plain"
-            size="small"
-            disable-transitions
-          >{{ row.role | roleName }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" prop="email" label="邮箱号" width="220px" />
-      <el-table-column align="center" prop="is_valid" label="是否冻结" width="120px">
-        <template slot-scope="{row}">
-          <el-switch
-            v-model="row.is_valid"
-            @change="userStateChaged(row)"
-          />
-        </template>
-      </el-table-column>
-      <el-table-column align="center" prop="create_time" label="创建时间" width="150px" />
-      <el-table-column align="center" prop="last_login_time" label="上次登录时间" width="150px" />
-      <el-table-column fixed="right" align="center" label="操作" min-width="80px">
-        <template slot-scope="scope">
-          <el-button type="text" size="small" @click="editUser(scope.row)">编辑</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getUserInfos" />
+        <el-table v-loading="listLoading" :data="lists" style="width: 100%" size="small">
+          <el-table-column align="center" type="index" label="序号" min-width="60px" />
+          <el-table-column align="center" prop="username" label="用户名" width="100px" />
+          <el-table-column align="center" prop="name" label="姓名" width="100px" />
+          <el-table-column align="center" prop="role" label="用户角色" width="120px">
+            <template slot-scope="{row}">
+              <el-tag
+                :type="row.role === 0 ? 'success' :
+                  row.role === 1 ? 'warning' : ''"
+                effect="plain"
+                size="small"
+                disable-transitions
+              >{{ row.role | roleName }}</el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" prop="email" label="邮箱号" width="220px" />
+          <el-table-column align="center" prop="is_valid" label="是否冻结" width="120px">
+            <template slot-scope="{row}">
+              <el-switch
+                v-model="row.is_valid"
+                @change="userStateChaged(row)"
+              />
+            </template>
+          </el-table-column>
+          <el-table-column align="center" prop="create_time" label="创建时间" width="150px" />
+          <el-table-column align="center" prop="last_login_time" label="上次登录时间" width="150px" />
+          <el-table-column fixed="right" align="center" label="操作" min-width="80px">
+            <template slot-scope="scope">
+              <el-button type="text" size="small" @click="editUser(scope.row)">编辑</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getUserInfos" />
       </div>
     </el-card>
     <el-dialog
@@ -56,8 +56,8 @@
       @close="cancelSubmit('updateUserForm')"
     >
       <el-form ref="updateUserForm" :inline="true" :rules="rules" :model="updateUserForm" size="small">
-        <el-form-item label="用户ID" prop="id">
-          <el-input v-model="updateUserForm.id" :disabled="true" style="width:120px" />
+        <el-form-item label="用户名" prop="username">
+          <el-input v-model="updateUserForm.username" :disabled="true" style="width:120px" />
         </el-form-item>
         <el-form-item label="角色" prop="role">
           <el-select v-model="updateUserForm.role" placeholder="请选择角色类型" style="width:120px">
@@ -108,7 +108,7 @@ export default {
         search: undefined
       },
       updateUserForm: {
-        id: undefined,
+        username: undefined,
         is_valid: undefined,
         role: undefined
       },
@@ -149,7 +149,7 @@ export default {
       })
     },
     async userStateChaged(row) {
-      this.updateUserForm.id = row.id
+      this.updateUserForm.username = row.username
       this.updateUserForm.is_valid = row.is_valid
       try {
         const { msg } = await updateUser(this.updateUserForm)
@@ -173,7 +173,7 @@ export default {
     },
     editUser(row) {
       this.dialogFrom = true
-      this.updateUserForm.id = row.id
+      this.updateUserForm.username = row.username
       this.updateUserForm.role = row.role
     },
     async edit(formName) {

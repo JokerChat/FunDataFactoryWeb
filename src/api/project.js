@@ -95,3 +95,11 @@ export function deleteProjectRole(id) {
     params: { id }
   })
 }
+
+export function projectDetail(id) {
+  return request({
+    url: '/project/detail',
+    method: 'get',
+    params: { id }
+  })
+}

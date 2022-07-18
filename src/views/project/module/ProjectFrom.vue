@@ -14,23 +14,25 @@
         <el-input v-model="projectForm.directory" placeholder="请输入项目脚本目录名" />
       </el-form-item>
       <el-form-item label="项目负责人" prop="owner">
-        <el-select
-          v-model="projectForm.owner"
-          filterable
-          remote
-          clearable
-          reserve-keyword
-          placeholder="请选择项目负责人"
-          :remote-method="remoteUserSearch"
-          :loading="searchLoading"
-        >
-          <el-option
-            v-for="item in users"
-            :key="item.id"
-            :label="`${item.username}-${item.email}`"
-            :value="item.id"
-          />
-        </el-select>
+        <el-tooltip effect="dark" content="输入用户姓名/用户名/邮箱号即可搜索哦~" placement="top">
+          <el-select
+            v-model="projectForm.owner"
+            filterable
+            remote
+            clearable
+            reserve-keyword
+            placeholder="请选择项目负责人"
+            :remote-method="remoteUserSearch"
+            :loading="searchLoading"
+          >
+            <el-option
+              v-for="item in users"
+              :key="item.id"
+              :label="`${item.username}-${item.email}`"
+              :value="item.username"
+            />
+          </el-select>
+        </el-tooltip>
       </el-form-item>
       <el-form-item label="项目拉取方式" prop="pull_type">
         <el-select v-model="projectForm.pull_type" filterable clearable placeholder="请选择项目拉取方式" @change="typeChange(projectForm.pull_type)">
@@ -184,6 +186,7 @@ export default {
       this.$nextTick(() => {
         this.dialogFrom = false
       })
+      this.users = []
       this.$refs[formName].resetFields()
     },
     async typeChange(type) {
