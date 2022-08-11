@@ -108,6 +108,7 @@ export default {
         search: undefined
       },
       updateUserForm: {
+        id: undefined,
         username: undefined,
         is_valid: undefined,
         role: undefined
@@ -149,7 +150,7 @@ export default {
       })
     },
     async userStateChaged(row) {
-      this.updateUserForm.username = row.username
+      this.updateUserForm.id = row.id
       this.updateUserForm.is_valid = row.is_valid
       try {
         const { msg } = await updateUser(this.updateUserForm)
@@ -173,6 +174,7 @@ export default {
     },
     editUser(row) {
       this.dialogFrom = true
+      this.updateUserForm.id = row.id
       this.updateUserForm.username = row.username
       this.updateUserForm.role = row.role
     },
