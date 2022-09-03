@@ -2,7 +2,8 @@
   <el-breadcrumb class="app-breadcrumb" separator="/">
     <transition-group name="breadcrumb">
       <el-breadcrumb-item v-for="(item,index) in levelList" :key="item.path">
-        <span v-if="item.redirect==='noRedirect'||index==levelList.length-1" class="no-redirect">{{ item.meta.title }}</span>
+        <!-- 动态设置 // 判断title是否为函数,不是函数直接取item.meta.title,否则取view.query.title-->
+        <span v-if="(item.redirect==='noRedirect'||index==levelList.length-1) && (typeof item.meta.title === 'function')" class="no-redirect">{{ item.meta.title($route.query) }}</span>
         <a v-else @click.prevent="handleLink(item)">{{ item.meta.title }}</a>
       </el-breadcrumb-item>
     </transition-group>

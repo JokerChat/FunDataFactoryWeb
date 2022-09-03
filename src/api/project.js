@@ -103,3 +103,10 @@ export function projectDetail(id) {
     params: { id }
   })
 }
+
+export function allProject() {
+  return request({
+    url: '/project/all',
+    method: 'get'
+  })
+}

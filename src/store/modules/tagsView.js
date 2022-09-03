@@ -5,10 +5,17 @@ const state = {
 
 const mutations = {
   ADD_VISITED_VIEW: (state, view) => {
+    // 动态设置tags名称,判断title是否为函数,不是函数直接取view.meta.title,否则取view.query.title
+    let title = ''
+    if (typeof view.meta.title === 'function') {
+      title = view.query.title
+    } else {
+      title = view.meta.title
+    }
     if (state.visitedViews.some(v => v.path === view.path)) return
     state.visitedViews.push(
       Object.assign({}, view, {
-        title: view.meta.title || 'no-name'
+        title: title || 'no-name'
       })
     )
   },

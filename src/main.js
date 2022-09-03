@@ -37,6 +37,18 @@ Vue.use(VueClipboard)
 
 Vue.config.productionTip = false
 
+// 动态设置标题
+router.beforeEach((to, from, next) => {
+  if (to.meta.title) {
+    if (typeof to.meta.title === 'function') {
+      document.title = to.meta.title(to.query)
+    } else {
+      document.title = to.meta.title
+    }
+  }
+  next()
+})
+
 new Vue({
   el: '#app',
   router,

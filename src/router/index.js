@@ -42,37 +42,45 @@ export const constantRoutes = [
     component: () => import('@/views/404'),
     hidden: true
   },
-
+  {
+    path: '/dashboard',
+    component: Layout,
+    redirect: '/dashboard',
+    children: [
+      {
+        path: 'dashboard',
+        name: 'Dashboard',
+        component: () => import('@/views/home/index'),
+        meta: { title: '数据报表', icon: 'el-icon-data-analysis' }
+      }
+    ]
+  },
   {
     path: '/',
     component: Layout,
-    redirect: '/dashboard',
-    children: [{
-      path: '/dashboard',
-      name: 'Dashboard',
-      component: () => import('@/views/dashboard/index'),
-      meta: { title: '数据报表', icon: 'el-icon-data-analysis', affix: true }
-    }]
-  },
-
-  {
-    path: '/case',
-    component: Layout,
     redirect: '/case/index',
-    name: 'Case',
+    name: 'CaseIndex',
     meta: { title: '数据工厂', icon: 'el-icon-office-building' },
     children: [
       {
-        path: 'index',
-        name: 'Index',
-        component: () => import('@/views/table/index'),
-        meta: { title: '场景列表', icon: 'el-icon-s-order' }
+        path: 'case/index',
+        name: 'CaseIndex',
+        component: () => import('@/views/cases/index'),
+        meta: { title: '场景列表', icon: 'el-icon-s-order', affix: true }
       },
       {
-        path: 'log',
-        name: 'Log',
-        component: () => import('@/views/tree/index'),
+        path: 'case/log',
+        name: 'CaseLog',
+        component: () => import('@/views/log/index'),
         meta: { title: '运行日志', icon: 'el-icon-reading' }
+      },
+      {
+        path: 'case/detail/:id',
+        name: 'CaseDetail',
+        component: () => import('@/views/cases/detail'),
+        hidden: true,
+        // 动态设置页面标题, 设置title为函数
+        meta: { title: query => { return query.title }, icon: '' }
       }
     ]
   },
@@ -101,6 +109,7 @@ export const constantRoutes = [
         name: 'projectDetail',
         component: () => import('@/views/project/detail'),
         hidden: true,
+        // 想要刷新，meta 配置 noCache: true
         meta: { title: '项目详情', icon: 'el-icon-folder' }
       }
     ]

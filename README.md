@@ -3,10 +3,10 @@
 
 ```bash
 # 克隆项目
-git clone https://github.com/PanJiaChen/vue-admin-template.git
+git clone https://github.com/JokerChat/FunDataFactoryWeb
 
 # 进入项目目录
-cd vue-admin-template
+cd FunDataFactoryWeb
 
 # 安装依赖
 npm install
