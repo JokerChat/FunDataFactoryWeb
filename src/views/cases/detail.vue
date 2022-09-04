@@ -97,7 +97,7 @@
                     border
                     size="small"
                     row-key="id"
-                    :tree-props="{children: 'lower', hasChildren: 'hasChildren'}"
+                    :tree-props="{children: 'child', hasChildren: 'hasChildren'}"
                   >
                     <el-table-column
                       align="center"
@@ -147,7 +147,7 @@
                     border
                     size="small"
                     row-key="id"
-                    :tree-props="{children: 'lower', hasChildren: 'hasChildren'}"
+                    :tree-props="{children: 'child', hasChildren: 'hasChildren'}"
                   >
                     <el-table-column
                       align="center"
