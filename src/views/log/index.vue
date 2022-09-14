@@ -59,7 +59,7 @@
         <el-table v-loading="listLoading" :data="lists" style="width: 100%" size="small">
           <el-table-column align="center" prop="requests_id" label="请求ID" width="250px" />
           <el-table-column align="center" prop="project_name" label="项目名称" width="150px" />
-          <el-table-column align="center" prop="cases" label="脚本目录" width="80px" />
+          <el-table-column align="center" prop="directory" label="脚本目录" width="80px" />
           <el-table-column align="center" prop="group_name" label="业务线" width="80px" />
           <el-table-column align="center" prop="title" :show-overflow-tooltip="true" label="场景标题" width="130px" />
           <el-table-column align="center" prop="name" label="方法名" width="130px" />
@@ -88,7 +88,7 @@
           <el-table-column align="center" prop="run_param_in" :show-overflow-tooltip="true" label="实际请求" width="100px" />
           <el-table-column align="center" prop="run_param_out" :show-overflow-tooltip="true" label="实际返回" width="100px" />
           <el-table-column align="center" prop="run_log" :show-overflow-tooltip="true" label="执行日志" width="300px" />
-          <el-table-column align="center" prop="create_code" label="执行人编码" min-width="100px" />
+<!--          <el-table-column align="center" prop="create_id" label="执行人编码" min-width="100px" />-->
           <el-table-column align="center" prop="create_name" label="执行人" min-width="100px" />
           <el-table-column align="center" prop="create_time" label="执行时间" min-width="150px" />
           <el-table-column fixed="right" align="center" label="操作" min-width="80px">
@@ -132,7 +132,7 @@
               >{{ logRow.run_status | statusName }}</el-tag>
             </el-descriptions-item>
             <el-descriptions-item label="执行人">{{ logRow.create_name }}</el-descriptions-item>
-            <el-descriptions-item label="执行人编码">{{ logRow.create_code }}</el-descriptions-item>
+<!--            <el-descriptions-item label="执行人编码">{{ logRow.create_code }}</el-descriptions-item>-->
             <el-descriptions-item label="执行时间">{{ logRow.create_time }}</el-descriptions-item>
 
           </el-descriptions>
@@ -251,6 +251,7 @@ export default {
       this.projects = data
     },
     search() {
+      console.log(this.listQuery)
       this.getRunLog()
     },
     refresh() {
@@ -260,7 +261,7 @@ export default {
       this.listQuery.requests_id = undefined
       this.listQuery.group = undefined
       this.listQuery.project = undefined
-      this.listQuery.call_type = undefined
+      this.listQuery.call_type = null
       this.listQuery.run_status = undefined
       this.getRunLog()
       this.getAllProject()

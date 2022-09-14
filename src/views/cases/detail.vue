@@ -382,7 +382,7 @@ export default {
           method: this.item.name,
           params: JSON.parse(this.item.example_param_in),
           project: this.item.git_project,
-          cases: this.item.cases,
+          directory: this.item.directory,
           requests_id: this.requests_id
         }
         const { data } = await run(run_data)

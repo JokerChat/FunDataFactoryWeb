@@ -2,7 +2,8 @@
   <div :class="classObj" class="app-wrapper">
     <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
     <sidebar class="sidebar-container" />
-    <div class="main-container">
+    <!--    解决增加后有滚动条 https://github.com/PanJiaChen/vue-admin-template/issues/434 -->
+    <div :class="{hasTagsView:true}" class="main-container">
       <div :class="{'fixed-header':fixedHeader}">
         <navbar />
       </div>
