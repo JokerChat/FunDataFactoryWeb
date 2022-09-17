@@ -215,6 +215,9 @@
                 <el-tab-pane label="实际返回" name="actualResponse">
                   <edit-monaco ref="actualResponseExample" v-model="actual_response" :readonly="readonly" />
                 </el-tab-pane>
+                <el-tab-pane v-if="actual_log !== null" label="运行日志" name="actualLog">
+                  <edit-monaco ref="actualLogExample" v-model="actual_log" :readonly="readonly" lang="markdown" />
+                </el-tab-pane>
               </el-tabs>
             </div>
           </el-card>
@@ -311,6 +314,7 @@ export default {
       saveLoading: false,
       actual_response: '',
       actual_request: '',
+      actual_log: null,
       response_list: [],
       request_list: [],
       params_list: [],
@@ -392,6 +396,8 @@ export default {
         this.actual_request = JSON.stringify(data.actual_request, null, '\t')
         console.log(data.result)
         console.log(data)
+        // 运行日志
+        this.actual_log = data.log
         if (data.result === 0) {
           this.result = `【${this.requests_id}】脚本执行成功！！！耗时：${data.cost}！！！`
         } else {
@@ -496,6 +502,10 @@ export default {
       } else if (tab.name === 'actualResponse') {
         t = setTimeout(function() {
           _this.$refs.actualResponseExample.layout()
+        }, 50)
+      } else if (tab.name === 'actualLog') {
+        t = setTimeout(function() {
+          _this.$refs.actualLogExample.layout()
         }, 50)
       }
     },

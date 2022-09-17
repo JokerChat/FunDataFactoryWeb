@@ -85,9 +85,9 @@
               >{{ row.run_status | statusName }}</el-tag>
             </template>
           </el-table-column>
-          <el-table-column align="center" prop="run_param_in" :show-overflow-tooltip="true" label="实际请求" width="100px" />
-          <el-table-column align="center" prop="run_param_out" :show-overflow-tooltip="true" label="实际返回" width="100px" />
-          <el-table-column align="center" prop="run_log" :show-overflow-tooltip="true" label="执行日志" width="300px" />
+<!--          <el-table-column align="center" prop="run_param_in" :show-overflow-tooltip="true" label="实际请求" width="100px" />-->
+<!--          <el-table-column align="center" prop="run_param_out" :show-overflow-tooltip="true" label="实际返回" width="100px" />-->
+<!--          <el-table-column align="center" prop="run_log" :show-overflow-tooltip="true" label="执行日志" width="300px" />-->
 <!--          <el-table-column align="center" prop="create_id" label="执行人编码" min-width="100px" />-->
           <el-table-column align="center" prop="create_name" label="执行人" min-width="100px" />
           <el-table-column align="center" prop="create_time" label="执行时间" min-width="150px" />
@@ -105,6 +105,7 @@
         :visible.sync="drawer"
         direction="rtl"
         :before-close="handleClose"
+        :destroy-on-close="true"
       >
         <div :style="{padding:'0 20px'}">
           <el-descriptions :column="3" size="medium">
@@ -140,11 +141,11 @@
             <el-tab-pane label="实际请求" name="actualRequest">
               <edit-monaco ref="actualRequestExample" v-model="actual_request" :readonly="readonly" />
             </el-tab-pane>
-            <el-tab-pane label="实际返回" name="actualResponse">
+            <el-tab-pane v-if="actual_response !== null" label="实际返回" name="actualResponse">
               <edit-monaco ref="actualResponseExample" v-model="actual_response" :readonly="readonly" />
             </el-tab-pane>
-            <el-tab-pane label="运行日志" name="actualLog">
-              <edit-monaco ref="actualLogExample" v-model="actual_log" :readonly="readonly" />
+            <el-tab-pane v-if="actual_log !== null" label="运行日志" name="actualLog">
+              <edit-monaco ref="actualLogExample" v-model="actual_log" :readonly="readonly" lang="markdown" />
             </el-tab-pane>
           </el-tabs>
         </div>
@@ -272,14 +273,15 @@ export default {
       this.logRow = row
       this.drawer = true
       // 实际返回
-      this.actual_response = JSON.stringify(JSON.parse(row.run_param_out), null, '\t')
+      if (row.run_param_out !== null) {
+        this.actual_response = JSON.stringify(JSON.parse(row.run_param_out), null, '\t')
+      } else {
+        this.actual_response = row.run_param_out
+      }
       // 实际请求
       this.actual_request = JSON.stringify(JSON.parse(row.run_param_in), null, '\t')
       // 运行日志
-      const log_msg = {
-        msg: this.logRow.run_log
-      }
-      this.actual_log = JSON.stringify(log_msg, null, '\t')
+      this.actual_log = this.logRow.run_log
       setTimeout(function() {
         _this.$refs.actualRequestExample.layout()
       }, 50)
