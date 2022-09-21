@@ -212,7 +212,7 @@
                 <el-tab-pane label="实际请求" name="actualRequest">
                   <edit-monaco ref="actualRequestExample" v-model="actual_request" :readonly="readonly" />
                 </el-tab-pane>
-                <el-tab-pane label="实际返回" name="actualResponse">
+                <el-tab-pane v-if="actual_response !== null" label="实际返回" name="actualResponse">
                   <edit-monaco ref="actualResponseExample" v-model="actual_response" :readonly="readonly" />
                 </el-tab-pane>
                 <el-tab-pane v-if="actual_log !== null" label="运行日志" name="actualLog">
@@ -391,7 +391,11 @@ export default {
         }
         const { data } = await run(run_data)
         // 实际返回
-        this.actual_response = JSON.stringify(data.actual_response, null, '\t')
+        if (data.actual_response !== null) {
+          this.actual_response = JSON.stringify(data.actual_response, null, '\t')
+        } else {
+          this.actual_response = data.actual_response
+        }
         // 实际请求
         this.actual_request = JSON.stringify(data.actual_request, null, '\t')
         console.log(data.result)
@@ -400,32 +404,31 @@ export default {
         this.actual_log = data.log
         if (data.result === 0) {
           this.result = `【${this.requests_id}】脚本执行成功！！！耗时：${data.cost}！！！`
-        } else {
+        } else if (data.result === 1) {
           this.result = `【${this.requests_id}】脚本执行异常！！！耗时：${data.cost}！！！`
+        } else {
+          this.result = `【${this.requests_id}】脚本执行失败！！！耗时：${data.cost}！！！`
         }
         console.log(this.result)
-        // 执行成功后跳转到实际返回tab
-        this.actualTab = 'actualResponse'
+        if (data.result !== 2) {
+          // 执行成功后跳转到实际返回tab
+          this.actualTab = 'actualResponse'
+          // 渲染数据
+          setTimeout(function() {
+            _this.$refs.actualResponseExample.layout()
+          }, 50)
+        } else {
+          this.actualTab = 'actualLog'
+          // 渲染数据
+          setTimeout(function() {
+            _this.$refs.actualLogExample.layout()
+          }, 50)
+        }
         // 执行成功后跳转到返回参数tab
         this.activeTab = 'response'
-        // 渲染数据
-        setTimeout(function() {
-          _this.$refs.actualResponseExample.layout()
-        }, 50)
         this.loading = false
       } catch (err) {
-        const _this = this
         this.loading = false
-        // eslint-disable-next-line no-undef
-        this.result = '【' + this.requests_id + '】' + '执行失败！！！'
-        const err_msg = {
-          msg: err.message
-        }
-        console.log(err_msg)
-        this.actual_response = JSON.stringify(err_msg, null, '\t')
-        setTimeout(function() {
-          _this.$refs.actualResponseExample.layout()
-        }, 50)
       }
     },
     saveCase() {
