@@ -5,11 +5,18 @@
     <breadcrumb class="breadcrumb-container" />
 
     <div class="right-menu">
-      <el-dropdown class="avatar-container" trigger="click">
-        <div class="avatar-wrapper">
-          <img src="@/icons/svg/sunhuo.png" class="user-avatar">
-          <i class="el-icon-caret-bottom" />
+      <el-tooltip effect="dark" content="点我联系作者哦~" placement="top">
+        <div class="right-menu-item hover-effect">
+          <svg-icon icon-class="weixin" @click="click" />
         </div>
+      </el-tooltip>
+      <el-dropdown class="avatar-container" trigger="click">
+        <el-tooltip effect="dark" content="点我获取更多教程~" placement="top">
+          <div class="avatar-wrapper">
+            <img src="@/icons/svg/sunhuo.png" class="user-avatar">
+            <i class="el-icon-caret-bottom" />
+          </div>
+        </el-tooltip>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
           <router-link to="/case/index">
             <el-dropdown-item>
@@ -22,6 +29,9 @@
           <router-link to="/system/project">
             <el-dropdown-item>项目管理</el-dropdown-item>
           </router-link>
+          <a target="_blank" href="https://mp.weixin.qq.com/mp/appmsgalbum?__biz=MzI2MjU0Mzg4MA==&action=getalbum&album_id=2379389965001687041">
+            <el-dropdown-item>数据工厂教程</el-dropdown-item>
+          </a>
           <el-dropdown-item divided @click.native="logout">
             <span style="display:block;">退出登录</span>
           </el-dropdown-item>
@@ -47,6 +57,13 @@ export default {
       'avatar'
     ])
   },
+  data() {
+    return {
+      images: {
+        weixin: require('@/icons/svg/sunhuo.png')
+      }
+    }
+  },
   methods: {
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
@@ -57,6 +74,14 @@ export default {
       await this.$store.dispatch('tagsView/delAllViews')
       // 去除重定向功能
       this.$router.push(`/login`)
+    },
+    click() {
+      this.$alert('<div style="text-align: center;"><img height="400" width="325" src="/static/img.png" alt=""></div>', '联系我', {
+        dangerouslyUseHTMLString: true,
+        confirmButtonText: '知道了',
+        closeOnPressEscape: true,
+        closeOnClickModal: true
+      })
     }
   }
 }
@@ -98,7 +123,7 @@ export default {
 
     .right-menu-item {
       display: inline-block;
-      padding: 0 8px;
+      padding: 0 18px;
       height: 100%;
       font-size: 18px;
       color: #5a5e66;

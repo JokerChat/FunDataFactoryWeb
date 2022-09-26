@@ -125,8 +125,8 @@ export default {
     return {
       tabName: 'login',
       loginForm: {
-        username: '',
-        password: ''
+        username: 'tester',
+        password: 'tester'
       },
       registerForm: {
         username: '',
