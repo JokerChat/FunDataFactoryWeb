@@ -184,7 +184,7 @@ export default {
   props: {
     readonly: {
       type: Boolean,
-      default: false
+      default: true
     }
   },
   data() {

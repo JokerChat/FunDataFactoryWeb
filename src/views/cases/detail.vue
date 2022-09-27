@@ -139,7 +139,7 @@
                   </el-table>
                 </el-tab-pane>
                 <el-tab-pane label="请求示例" name="requestExample">
-                  <edit-monaco ref="editRequestExample" v-model="item.example_param_in" :readonly="readonly" />
+                  <edit-monaco ref="editRequestExample" v-model="item.example_param_in" readonly="false" />
                 </el-tab-pane>
                 <el-tab-pane label="返回参数" name="response">
                   <el-table
@@ -272,7 +272,7 @@ export default {
   props: {
     readonly: {
       type: Boolean,
-      default: false
+      default: true
     }
   },
   data() {

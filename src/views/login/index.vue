@@ -2,7 +2,7 @@
   <div class="login-container">
     <div class="login-form-wrap">
       <div class="title-container">
-        <h3 class="title">Fun数据工厂</h3>
+        <h3 class="title">FunLine数据工厂</h3>
       </div>
       <el-tabs v-model="tabName" stretch @tab-click="handleClick">
         <el-tab-pane label="登录" name="login" />

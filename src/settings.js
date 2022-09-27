@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: 'Fun数据工厂',
+  title: 'FunLine数据工厂',
 
   /**
    * @type {boolean} true | false
@@ -12,6 +12,6 @@ module.exports = {
    * @type {boolean} true | false
    * @description Whether show the logo in sidebar
    */
-  sidebarLogo: false,
+  sidebarLogo: true,
   tagsView: true
 }
