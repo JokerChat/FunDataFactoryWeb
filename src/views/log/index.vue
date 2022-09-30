@@ -63,7 +63,7 @@
           <el-table-column align="center" prop="group_name" label="业务线" width="80px" />
           <el-table-column align="center" prop="title" :show-overflow-tooltip="true" label="场景标题" width="130px" />
           <el-table-column align="center" prop="name" label="方法名" width="130px" />
-          <el-table-column align="center" prop="path" label="脚本路径" width="100px" />
+          <el-table-column align="center" prop="path" label="脚本路径" width="180px" />
           <el-table-column align="center" prop="call_type" label="调用方式" width="100px">
             <template slot-scope="{row}">
               <el-tag
