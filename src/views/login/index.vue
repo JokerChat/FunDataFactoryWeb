@@ -113,6 +113,7 @@
         </el-form>
       </div>
     </div>
+    <a href="https://beian.miit.gov.cn/" target="_blank">粤ICP备2022117523号-1</a>
   </div>
 </template>
 

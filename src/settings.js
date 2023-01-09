@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: 'FunLine数据工厂',
+  title: '技术分享',
 
   /**
    * @type {boolean} true | false
