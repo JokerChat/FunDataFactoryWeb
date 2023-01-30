@@ -110,3 +110,19 @@ export function allProject() {
     method: 'get'
   })
 }
+
+export function installProject(id) {
+  return request({
+    url: '/project/install',
+    method: 'get',
+    params: { id }
+  })
+}
+
+export function getInstallProject(id) {
+  return request({
+    url: '/project/install/get',
+    method: 'get',
+    params: { id }
+  })
+}

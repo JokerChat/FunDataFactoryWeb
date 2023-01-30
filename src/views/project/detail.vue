@@ -196,6 +196,42 @@
             </el-col>
           </el-row>
         </el-tab-pane>
+        <el-tab-pane label="更新依赖" name="install">
+          <el-row :gutter="20">
+            <el-col :lg="10" :xl="8">
+              <div style="padding:10px">
+                <el-card class="python-card">
+                  <div slot="header">
+                    <el-row type="flex" :gutter="20" align="middle">
+                      <el-col :lg="16" :xl="18">
+                        <span style="font-weight: bold">Python依赖列表</span>
+                      </el-col>
+                      <el-col :lg="8" :xl="6">
+                        <el-button size="mini" type="primary" round icon="el-icon-video-play" :loading="installLoading" @click="updateInstall()">更新依赖</el-button>
+                      </el-col>
+                    </el-row>
+                  </div>
+                  <div class="case_text case_item">
+                    <edit-monaco ref="installTxt" v-model="txt" :readonly="true" lang="markdown" />
+                  </div>
+                </el-card>
+              </div>
+            </el-col>
+            <el-col :lg="14" :xl="16">
+              <el-card v-if="install_log===''" class="python-card">
+                <el-empty v-if="install_log===''" description="修改项目中的requirements.txt，并git push推送上传，然后点击【更新依赖】按钮，即可更新服务器上的依赖" />
+              </el-card>
+              <el-card v-if="install_log !==''" class="python-card">
+                <div slot="header">
+                  <span style="font-weight: bold">依赖更新结果</span>
+                </div>
+                <div class="case_text case_item">
+                  <edit-monaco ref="installLog" v-model="install_log" :readonly="true" lang="markdown" />
+                </div>
+              </el-card>
+            </el-col>
+          </el-row>
+        </el-tab-pane>
       </el-tabs>
     </el-card>
     <el-dialog
@@ -249,16 +285,20 @@
 
 <script>
 import { Decrypt } from '@/utils/aes.js'
-import { projectDetail, getRoleList, insertProjectRole, updateProjectRole, updateProject, deleteProjectRole } from '@/api/project'
+import { projectDetail, getRoleList, insertProjectRole, updateProjectRole, updateProject, deleteProjectRole, getInstallProject, installProject } from '@/api/project'
 import { searchUser } from '@/api/user'
 import Pagination from '@/components/Pagination'
+import EditMonaco from '@/components/Code/monaco'
 
 export default {
   name: 'Projecdetail',
-  components: { Pagination },
+  components: { Pagination, EditMonaco },
   props: {},
   data() {
     return {
+      txt: '',
+      install_log: '',
+      installLoading: false,
       searchLoading: false,
       lists: [],
       listQuery: {
@@ -370,6 +410,15 @@ export default {
         this.getProjectDetail().then(() => {
           this.remoteOwnerSearch(this.projectForm.owner)
         })
+      } else {
+        this.getProjectInstallTxt()
+        // eslint-disable-next-line prefer-const
+        let t
+        clearTimeout(t)
+        const _this = this
+        setTimeout(function() {
+          _this.$refs.installTxt.layout()
+        }, 100)
       }
     },
     search() {
@@ -514,6 +563,27 @@ export default {
         }, 200)
       } else {
         this.owners = []
+      }
+    },
+    async getProjectInstallTxt() {
+      const { data } = await getInstallProject(this.$route.params.id)
+      this.txt = data
+    },
+    async updateInstall() {
+      try {
+        this.installLoading = true
+        const { data } = await installProject(this.$route.params.id)
+        this.install_log = data
+        let t
+        clearTimeout(t)
+        const _this = this
+        setTimeout(function() {
+          _this.$refs.installLog.layout()
+        }, 50)
+        this.installLoading = false
+      } catch (e) {
+        console.log(e)
+        this.installLoading = false
       }
     }
   }
