@@ -189,6 +189,7 @@ export default {
   },
   data() {
     return {
+      log_timer: null,
       actualTab: 'actualRequest',
       drawer: false,
       title: '',
@@ -295,19 +296,18 @@ export default {
       done()
     },
     actualClick(tab, event) {
-      let t
-      clearTimeout(t)
+      clearTimeout(this.log_timer)
       const _this = this
       if (tab.name === 'actualRequest') {
-        t = setTimeout(function() {
+        this.log_timer = setTimeout(function() {
           _this.$refs.actualRequestExample.layout()
         }, 50)
       } else if (tab.name === 'actualResponse') {
-        t = setTimeout(function() {
+        this.log_timer = setTimeout(function() {
           _this.$refs.actualResponseExample.layout()
         }, 50)
       } else if (tab.name === 'actualLog') {
-        t = setTimeout(function() {
+        this.log_timer = setTimeout(function() {
           _this.$refs.actualLogExample.layout()
         }, 50)
       }

@@ -138,8 +138,29 @@
                     />
                   </el-table>
                 </el-tab-pane>
-                <el-tab-pane label="请求示例" name="requestExample">
-                  <edit-monaco ref="editRequestExample" v-model="item.example_param_in" readonly="false" />
+                <el-tab-pane label="表单请求" name="requestForm">
+                  <div v-if="Object.keys(casesForm).length > 0" style="display:flex;justify-content: center; align-items:center;">
+                    <el-form ref="casesForm" :model="casesForm" size="mini" label-position="left" label-width="150px">
+                      <el-form-item v-for="field in caseFormFields" :key="field.id" :prop="field.field" :label="field.field">
+                        <template v-if="field.type !== 'Object[]'">
+                          <el-input v-model="casesForm[field.field]" :placeholder="field.description" style="width:400px" />
+                        </template>
+                        <el-form v-else-if="field.type === 'Object[]'" size="mini" label-position="top" label-width="150px">
+                          <el-button type="primary" icon="el-icon-plus" @click="addField(field.field)">添加</el-button>
+                          <div v-for="(item, index) in casesForm[field.field]" :key="item">
+                            <el-form-item v-for="subField in field.child" :key="subField.id" :prop="subField.field" :label="subField.field">
+                              <el-input v-model="casesForm[field.field][index][subField.field]" :placeholder="subField.description" style="width:400px" />
+                            </el-form-item>
+                            <el-button type="danger" icon="el-icon-delete" @click="removeField(field.field, index)">删除</el-button>
+                          </div>
+                        </el-form>
+                      </el-form-item>
+                    </el-form>
+                  </div>
+                  <el-empty v-else description="该脚本没维护字段信息" />
+                </el-tab-pane>
+                <el-tab-pane label="JSON请求" name="requestExample">
+                  <edit-monaco ref="editRequestExample" v-model="item.example_param_in" :readonly="false" />
                 </el-tab-pane>
                 <el-tab-pane label="返回参数" name="response">
                   <el-table
@@ -321,7 +342,12 @@ export default {
       activeTab: 'request',
       actualTab: 'actualResponse',
       result: '',
-      requests_id: ''
+      requests_id: '',
+      active_timer: null,
+      actual_timer: null,
+      caseFormFields: [], // 从后端获取到的表单字段信息
+      casesForm: {}, // 表单数据
+      casesFormRules: {} // 表单验证规则 暂时不做了
     }
   },
   computed: {
@@ -363,6 +389,7 @@ export default {
         this.item.example_param_out = JSON.stringify(JSON.parse(this.item.example_param_out), null, '\t')
         // 格式化示例返回参数
         this.item.example_param_in = JSON.stringify(JSON.parse(this.item.example_param_in), null, '\t')
+        this.createCaseForm() // 在数据赋值成功后调用createCaseForm方法
         this.listLoading.close()
       } catch (err) {
         this.listLoading.close()
@@ -376,6 +403,8 @@ export default {
         // 生成32位请求id
         this.requests_id = v4().replaceAll('-', '')
         console.log(this.requests_id)
+        console.log('运行时表单数据')
+        console.log(this.casesForm)
         const _this = this
         const run_data = {
           cases_id: this.item.id,
@@ -384,7 +413,7 @@ export default {
           project_id: this.item.project_id,
           path: this.item.path,
           method: this.item.name,
-          params: JSON.parse(this.item.example_param_in),
+          params: this.activeTab === 'requestForm' ? this.casesForm : JSON.parse(this.item.example_param_in),
           project: this.item.git_project,
           directory: this.item.directory,
           requests_id: this.requests_id
@@ -473,20 +502,19 @@ export default {
       this.$refs[formName].resetFields()
     },
     handleClick(tab, event) {
-      let t
-      clearTimeout(t)
+      clearTimeout(this.active_timer)
       const _this = this
       if (tab.name === 'requestExample') {
         // this.$refs.editRequestExample.layout()
-        t = setTimeout(function() {
+        this.active_timer = setTimeout(function() {
           _this.$refs.editRequestExample.layout()
         }, 50)
       } else if (tab.name === 'responseExample') {
-        t = setTimeout(function() {
+        this.active_timer = setTimeout(function() {
           _this.$refs.editResponseExample.layout()
         }, 50)
       } else if (tab.name === 'actualResponse') {
-        t = setTimeout(function() {
+        this.active_timer = setTimeout(function() {
           _this.$refs.actualResponseExample.layout()
         }, 50)
       } else if (tab.name === 'params') {
@@ -494,20 +522,19 @@ export default {
       }
     },
     actualClick(tab, event) {
-      let t
-      clearTimeout(t)
+      clearTimeout(this.actual_timer)
       const _this = this
       if (tab.name === 'actualRequest') {
         // this.$refs.editRequestExample.layout()
-        t = setTimeout(function() {
+        this.actual_timer = setTimeout(function() {
           _this.$refs.actualRequestExample.layout()
         }, 50)
       } else if (tab.name === 'actualResponse') {
-        t = setTimeout(function() {
+        this.actual_timer = setTimeout(function() {
           _this.$refs.actualResponseExample.layout()
         }, 50)
       } else if (tab.name === 'actualLog') {
-        t = setTimeout(function() {
+        this.actual_timer = setTimeout(function() {
           _this.$refs.actualLogExample.layout()
         }, 50)
       }
@@ -584,6 +611,44 @@ export default {
         })
         console.log(e)
       })
+    },
+    createCaseForm() {
+      this.caseFormFields = JSON.parse(this.item.param_in)
+      this.caseFormFields.forEach(field => {
+        // 初始化表单值
+        if (field.type === 'Object[]') {
+          this.$set(this.casesForm, field.field, [])
+          // 确保数组至少有一个元素
+          if (this.casesForm[field.field].length === 0) {
+            this.casesForm[field.field].push({})
+          }
+          field.child.forEach(subfield => {
+            this.$set(this.casesForm[field.field][0], subfield.field, undefined)
+          })
+        } else {
+          this.$set(this.casesForm, field.field, undefined)
+        }
+        // 初始化表单校验规则
+      })
+      console.log('初始化后的表单')
+      console.log(this.casesForm)
+    },
+    addField(fieldName) {
+      const field = this.caseFormFields.find(f => f.field === fieldName)
+      const childFields = field.child
+      // 生成一个新的空对象
+      const newItem = {}
+      childFields.forEach(subField => {
+        newItem[subField.field] = ''
+      })
+      this.casesForm[fieldName].push(newItem)
+      console.log('添加后表单数据')
+      console.log(this.casesForm)
+    },
+    removeField(fieldName, index) {
+      this.casesForm[fieldName].splice(index, 1)
+      console.log('删除后表单数据')
+      console.log(this.casesForm)
     }
   }
 
