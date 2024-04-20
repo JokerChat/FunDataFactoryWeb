@@ -7,6 +7,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    name: Build Image
     steps:
     - uses: actions/checkout@v3
     - name: 构建Docker镜像
@@ -17,11 +18,10 @@ jobs:
       run: docker push ${{ secrets.DOCKER_REPOSITORY }}:${{ github.sha }}
   pull-docker:
     needs: [ build ]
-    name: Pull Docker
+    name: Deploy Container
     runs-on: ubuntu-latest
     steps:
       - name: 容器部署
-        # 使用appleboy/ssh-action@master完成ssh登录服务器
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
@@ -34,4 +34,4 @@ jobs:
             docker images -q ${{ secrets.DOCKER_REPOSITORY }} | xargs -r docker rmi -f
             docker login --username=${{ secrets.DOCKER_USERNAME }} --password ${{ secrets.DOCKER_PASSWORD }}
             docker pull ${{ secrets.DOCKER_REPOSITORY }}:${{ github.sha }}
-            docker run -itd -p 80:80 ${{ secrets.DOCKER_REPOSITORY }}:${{ github.sha }}
+            docker run -itd -p 81:80 ${{ secrets.DOCKER_REPOSITORY }}:${{ github.sha }}
