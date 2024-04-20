@@ -143,7 +143,7 @@ export default {
     },
     // 删除项目
     remove(row) {
-      this.$confirm('是否删除 ' + row.project_name + ' 项目 ? 此操作会将项目下的所有造数场景删除！！！', '提示', {
+      this.$confirm('是否删除 ' + row.project_name + ' 项目 ? 此操作会将项目下的所有场景删除！！！', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '点错了',
         lockScroll: false,
