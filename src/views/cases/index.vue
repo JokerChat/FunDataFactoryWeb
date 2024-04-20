@@ -273,8 +273,8 @@ export default {
       this.listQuery.case_id = undefined
       this.listQuery.group = undefined
       this.listQuery.project = undefined
-      this.syncProject.id = undefined
-      this.syncProject.projectName = undefined
+      this.syncProject.id = ''
+      this.syncProject.projectName = ''
       this.getCaseList()
       // this.getGroups()
       this.getAllProject()
