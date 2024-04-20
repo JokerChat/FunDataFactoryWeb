@@ -29,8 +29,8 @@ jobs:
           password: ${{ secrets.HOST_PASSWORD }}
           port: ${{ secrets.HOST_PORT }}
           script: |
-            docker ps -q --filter ancestor=${{ secrets.DOCKER_REPOSITORY }} | xargs -r docker stop
-            docker ps -aq --filter ancestor=${{ secrets.DOCKER_REPOSITORY }} | xargs -r docker rm -f
+            docker ps | grep "${{ secrets.DOCKER_REPOSITORY }}" | awk '{print $1}' | xargs -r docker stop
+            docker ps -a | grep "${{ secrets.DOCKER_REPOSITORY }}" | awk '{print $1}' | xargs -r docker rm -f
             docker images -q ${{ secrets.DOCKER_REPOSITORY }} | xargs -r docker rmi -f
             docker login --username=${{ secrets.DOCKER_USERNAME }} --password ${{ secrets.DOCKER_PASSWORD }}
             docker pull ${{ secrets.DOCKER_REPOSITORY }}:${{ github.sha }}
