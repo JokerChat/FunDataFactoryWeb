@@ -1,0 +1,17 @@
+name: Deploy FunLineWeb
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: 构建Docker镜像
+      run: docker build . --file Dockerfile --tag ${{ secrets.FUNLINE_FRONTEND_REPOSITORY }}:${{ github.sha }}
+    - name: 登陆镜像仓库
+      run: docker login --username=${{ secrets.DOCKER_USERNAME }} --password ${{ secrets.DOCKER_PASSWORD }}
+    - name: 推送镜像
+      run: docker push ${{ secrets.FUNLINE_FRONTEND_REPOSITORY }}:${{ github.sha }}
