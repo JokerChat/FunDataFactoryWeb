@@ -5,7 +5,7 @@ WORKDIR /app
 # 复制包文件到app目录下
 COPY package.json ./
 # 执行安装模块命令
-RUN npm config set registry https://registry.npm.taobao.org/ && \
+RUN npm config set registry https://registry.npmmirror.com/ && \
     npm install
 # 复制当前目录下的所有文件
 COPY . ./
